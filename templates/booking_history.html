@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Booking History - Digital Service Booking{% endblock %}
+
+{% block content %}
+<h1 class="mb-5 text-center fw-bold text-primary">Your Complete Booking History</h1>
+
+{% if bookings %}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead class="table-primary">
+            <tr>
+                <th scope="col">Service</th>
+                <th scope="col">Date & Time</th>
+                <th scope="col">Status</th>
+                <th scope="col">Booked On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.service.name }}</td>
+                <td>{{ booking.booking_date_time|date:"F d, Y P" }}</td>
+                <td><span class="badge {% if booking.status == 'Pending' %}bg-warning text-dark{% elif booking.status == 'Approved' %}bg-primary{% elif booking.status == 'Completed' %}bg-success{% else %}bg-danger{% endif %}">{{ booking.status }}</span></td>
+                <td>{{ booking.created_at|date:"F d, Y P" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+    <i class="fas fa-info-circle me-2"></i> You have not made any bookings yet.
+</div>
+{% endif %}
+
+<div class="text-center mt-5">
+    <a href="{% url 'service_list' %}" class="btn btn-outline-primary btn-lg">Browse More Services <i class="fas fa-arrow-right ms-2"></i></a>
+</div>
+
+{% endblock %}

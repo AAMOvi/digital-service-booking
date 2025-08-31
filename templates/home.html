@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Digital Service Booking{% endblock %}
+
+{% block content %}
+<header class="hero-section">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Your Digital Solutions, Just a Click Away.</h1>
+        <p class="lead mt-3">Seamlessly book expert services for all your tech needs, from device repairs to software installations and smart home setups.</p>
+        <a href="{% url 'service_list' %}" class="btn btn-light btn-lg mt-4 shadow-sm">Explore Services <i class="fas fa-arrow-right ms-2"></i></a>
+    </div>
+</header>
+
+<section class="services-overview mb-5">
+    <h2 class="text-center mb-5 fw-bold text-primary">Our Expertise at Your Fingertips</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        {% for service in featured_services %}
+        <div class="col">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        {# Dynamic icons based on service name (simple example, expand as needed) #}
+                        {% if "computer" in service.name|lower or "pc" in service.name|lower %}
+                            <i class="fas fa-desktop service-icon"></i>
+                        {% elif "laptop" in service.name|lower %}
+                            <i class="fas fa-laptop service-icon"></i>
+                        {% elif "network" in service.name|lower or "wi-fi" in service.name|lower %}
+                            <i class="fas fa-wifi service-icon"></i>
+                        {% elif "data" in service.name|lower %}
+                            <i class="fas fa-database service-icon"></i>
+                        {% elif "smart home" in service.name|lower or "device" in service.name|lower %}
+                            <i class="fas fa-lightbulb service-icon"></i>
+                        {% elif "software" in service.name|lower %}
+                            <i class="fas fa-code service-icon"></i>
+                        {% elif "cloud" in service.name|lower or "backup" in service.name|lower %}
+                            <i class="fas fa-cloud service-icon"></i>
+                        {% else %}
+                            <i class="fas fa-tools service-icon"></i> {# Default icon #}
+                        {% endif %}
+
+                        <h5 class="card-title fw-bold text-info mt-3">{{ service.name }}</h5>
+                        <p class="card-text text-muted flex-grow-1">{{ service.description|truncatechars:100 }}</p>
+                    </div>
+                    <a href="{% url 'book_service' service.id %}" class="btn btn-outline-primary mt-3">Book Now</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <div class="alert alert-info" role="alert">
+                No services available yet. Please add some from the admin panel!
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="how-it-works mb-5">
+    <h2 class="text-center mb-5 fw-bold text-primary">How It Works</h2>
+    <div class="row text-center g-4">
+        <div class="col-md-4">
+            <div class="card p-4 h-100 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-user-plus fa-3x text-success mb-3"></i>
+                    <h5 class="card-title fw-bold">1. Register & Login</h5>
+                    <p class="card-text text-muted">Create your account or log in to access our services.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 h-100 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-search fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title fw-bold">2. Browse Services</h5>
+                    <p class="card-text text-muted">Explore our wide range of digital repair and support services.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 h-100 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-calendar-check fa-3x text-info mb-3"></i>
+                    <h5 class="card-title fw-bold">3. Book Your Slot</h5>
+                    <p class="card-text text-muted">Select a service, choose a convenient date and time, and confirm.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

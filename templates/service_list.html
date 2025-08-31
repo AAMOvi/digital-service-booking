@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Services - Digital Service Booking{% endblock %}
+
+{% block content %}
+<h1 class="mb-5 text-center fw-bold text-primary">All Available Services</h1>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for service in services %}
+    <div class="col">
+        <div class="card h-100 shadow-sm p-4">
+            <div class="card-body d-flex flex-column">
+                <div class="text-center mb-3">
+                    {# Dynamic icons based on service name #}
+                    {% if "computer" in service.name|lower or "pc" in service.name|lower %}
+                        <i class="fas fa-desktop service-icon"></i>
+                    {% elif "laptop" in service.name|lower %}
+                        <i class="fas fa-laptop service-icon"></i>
+                    {% elif "network" in service.name|lower or "wi-fi" in service.name|lower %}
+                        <i class="fas fa-wifi service-icon"></i>
+                    {% elif "data" in service.name|lower %}
+                        <i class="fas fa-database service-icon"></i>
+                    {% elif "smart home" in service.name|lower or "device" in service.name|lower %}
+                        <i class="fas fa-lightbulb service-icon"></i>
+                    {% elif "software" in service.name|lower %}
+                        <i class="fas fa-code service-icon"></i>
+                    {% elif "cloud" in service.name|lower or "backup" in service.name|lower %}
+                        <i class="fas fa-cloud service-icon"></i>
+                    {% else %}
+                        <i class="fas fa-tools service-icon"></i>
+                    {% endif %}
+                </div>
+                <h5 class="card-title fw-bold text-info text-center">{{ service.name }}</h5>
+                <p class="card-text text-muted flex-grow-1 text-center">{{ service.description }}</p>
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                    <span class="fw-bold text-success fs-4">${{ service.price|floatformat:2 }}</span>
+                    <a href="{% url 'book_service' service.id %}" class="btn btn-primary">Book Now <i class="fas fa-arrow-right ms-2"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center">
+        <div class="alert alert-info" role="alert">
+            No services are currently available. Please check back later!
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

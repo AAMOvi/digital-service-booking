@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Digital Service Booking{% endblock %}
+
+{% block content %}
+<h1 class="mb-5 text-center fw-bold text-primary">Welcome, {{ user.username }}!</h1>
+
+<div class="row mb-5 g-4">
+    <div class="col-md-6">
+        <div class="card text-center p-4 shadow-lg h-100">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <i class="fas fa-plus-circle fa-4x text-info mb-3"></i>
+                <h3 class="card-title fw-bold text-info">Book a New Service</h3>
+                <p class="card-text text-muted flex-grow-1">Explore our wide range of digital services and schedule your next appointment.</p>
+                <a href="{% url 'service_list' %}" class="btn btn-primary mt-auto py-2">Browse Services <i class="fas fa-arrow-right ms-2"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card text-center p-4 shadow-lg h-100">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <i class="fas fa-history fa-4x text-secondary mb-3"></i>
+                <h3 class="card-title fw-bold text-secondary">View All History</h3>
+                <p class="card-text text-muted flex-grow-1">Review your past completed services and track current bookings.</p>
+                <a href="{% url 'booking_history' %}" class="btn btn-outline-primary mt-auto py-2">Go to History <i class="fas fa-external-link-alt ms-2"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="mb-4 fw-bold text-primary">Upcoming Bookings</h2>
+{% if upcoming_bookings %}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Service</th>
+                <th scope="col">Date & Time</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in upcoming_bookings %}
+            <tr>
+                <td>{{ booking.service.name }}</td>
+                <td>{{ booking.booking_date_time|date:"F d, Y P" }}</td>
+                <td>
+                    <span class="badge {% if booking.status == 'Completed' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                        {{ booking.status }}
+                    </span>
+                </td>
+                <td>
+                    {% if booking.status == 'Pending' %}
+                    <a href="{% url 'payment_simulator' booking_id=booking.id %}" class="btn btn-sm btn-success">Pay Now</a>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info mb-5" role="alert">
+    <i class="fas fa-info-circle me-2"></i> You have no upcoming bookings.
+</div>
+{% endif %}
+
+<h2 class="mb-4 fw-bold text-primary">Past Bookings</h2>
+{% if past_bookings %}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Service</th>
+                <th scope="col">Date & Time</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in past_bookings %}
+            <tr>
+                <td>{{ booking.service.name }}</td>
+                <td>{{ booking.booking_date_time|date:"F d, Y P" }}</td>
+                <td><span class="badge {% if booking.status == 'Completed' %}bg-success{% elif booking.status == 'Declined' or booking.status == 'Cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">{{ booking.status }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+    <i class="fas fa-info-circle me-2"></i> You have no past bookings.
+</div>
+{% endif %}
+{% endblock %}
